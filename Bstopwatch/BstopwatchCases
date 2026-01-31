@@ -1,0 +1,60 @@
+BStopWatch(const char *name, bool silent = false)
+case 1: name is NULL =>
+    Name() returns ""
+    Destructor prints output (unless silent)
+case 2: name points to valid string =>
+    Name() returns the same string
+    Destructor prints output (unless silent)
+case 3: silent is true =>
+    Destructor does not print output
+
+bigtime_t ElapsedTime(void) const
+case 1: Immediately after construction =>
+    ElapsedTime() is near zero
+case 2: After waiting some time =>
+    ElapsedTime() increases appropriately
+case 3: While suspended =>
+    ElapsedTime() does not increase during suspension
+
+bigtime_t Lap(void)
+case 1: Call Lap() less than 10 times =>
+    Returns increasing values
+case 2: Call Lap() more than 10 times =>
+    Only 10 laps stored, last lap is overwritten
+case 3: Call Lap() while suspended =>
+    Returns 0
+
+void Suspend(void) / void Resume(void)
+case 1: Suspend, wait, Resume =>
+    ElapsedTime() does not include suspended period
+case 2: Multiple Suspend/Resume cycles =>
+    ElapsedTime() is correct
+case 3: Suspend when already suspended =>
+    No effect
+case 4: Resume when not suspended =>
+    No effect
+
+void Reset(void)
+case 1: After Reset() =>
+    ElapsedTime() is near zero
+    Laps are cleared
+
+const char *Name(void) const
+case 1: Name is NULL =>
+    Returns ""
+case 2: Name is valid string =>
+    Returns the string
+
+Destructor output
+case 1: silent is false =>
+    Prints elapsed time and lap info
+case 2: silent is true =>
+    No output
+
+Edge cases
+case 1: Lap() called while suspended =>
+    Returns 0
+case 2: Suspend/Resume called in quick succession =>
+    ElapsedTime() is correct
+case 3: Reset during suspension =>
+    Timer resets, suspension state is cleared
