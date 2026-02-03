@@ -218,7 +218,7 @@ void
 BUrlTest::RelativeUrlConstructor_ResolvesRelativePath()
 {
 	BUrl base("https://host.com/dir/", false);
-	BUrl rel(base, "subdir/file.txt");
+	BUrl rel(base, BString("subdir/file.txt"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("https"), rel.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("host.com"), rel.Host());
@@ -230,7 +230,7 @@ void
 BUrlTest::RelativeUrlConstructorWithDotDot_RemovesDotSegments()
 {
 	BUrl base("http://example.com/dir1/dir2/page.html", false);
-	BUrl relative(base, "../other.html");
+	BUrl relative(base, BString("../other.html"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("/dir1/other.html"), relative.Path());
 }
@@ -240,7 +240,7 @@ void
 BUrlTest::RelativeUrlConstructorWithAbsolutePath_UsesAbsolutePath()
 {
 	BUrl base("http://example.com/dir/page.html", false);
-	BUrl relative(base, "/absolute/path");
+	BUrl relative(base, BString("/absolute/path"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("/absolute/path"), relative.Path());
 }
@@ -250,7 +250,7 @@ void
 BUrlTest::RelativeUrlConstructorWithProtocol_UsesRelativeUrl()
 {
 	BUrl base("http://example.com/path", false);
-	BUrl relative(base, "https://other.com/newpath");
+	BUrl relative(base, BString("https://other.com/newpath"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("https"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("other.com"), relative.Host());
@@ -262,7 +262,7 @@ void
 BUrlTest::RelativeUrlConstructorWithAuthority_UsesRelativeAuthority()
 {
 	BUrl base("http://example.com/path", false);
-	BUrl relative(base, "//other.com/newpath");
+	BUrl relative(base, BString("//other.com/newpath"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("http"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("other.com"), relative.Host());
@@ -274,7 +274,7 @@ void
 BUrlTest::RelativeUrlConstructorEmptyRelative_UsesBasePath()
 {
 	BUrl base("http://example.com/path?query=1", false);
-	BUrl relative(base, "");
+	BUrl relative(base, BString(""));
 
 	CPPUNIT_ASSERT_EQUAL(BString("http"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("example.com"), relative.Host());
@@ -288,7 +288,7 @@ BUrlTest::RelativeUrlConstructorWithQueryOnly_UsesBasePathWithNewQuery()
 {
 	// RFC3986 Section 5.4: "?y" should use base path with new query
 	BUrl base("http://example.com/path?oldquery", false);
-	BUrl relative(base, "?newquery");
+	BUrl relative(base, BString("?newquery"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("http"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("example.com"), relative.Host());
@@ -302,7 +302,7 @@ BUrlTest::RelativeUrlConstructorWithFragmentOnly_UsesBasePathAndQuery()
 {
 	// RFC3986 Section 5.4: "#s" should use base path and query with new fragment
 	BUrl base("http://example.com/path?query", false);
-	BUrl relative(base, "#section");
+	BUrl relative(base, BString("#section"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("http"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("example.com"), relative.Host());
@@ -317,7 +317,7 @@ BUrlTest::RelativeUrlConstructorWithDotSegment_RemovesDotSegments()
 {
 	// RFC3986 Section 5.4: "./g" should resolve to "/base/g"
 	BUrl base("http://example.com/base/index.html", false);
-	BUrl relative(base, "./other.html");
+	BUrl relative(base, BString("./other.html"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("/base/other.html"), relative.Path());
 }
@@ -328,7 +328,7 @@ BUrlTest::RelativeUrlConstructorMultipleDotDot_RemovesMultipleSegments()
 {
 	// RFC3986 Section 5.4: "../../g" should go up two directories
 	BUrl base("http://example.com/a/b/c/page.html", false);
-	BUrl relative(base, "../../other.html");
+	BUrl relative(base, BString("../../other.html"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("/a/other.html"), relative.Path());
 }
@@ -339,7 +339,7 @@ BUrlTest::RelativeUrlConstructorEmptyBasePath_MergesCorrectly()
 {
 	// RFC3986 Section 5.2.3: If base has authority and empty path, result is "/" + relative
 	BUrl base("http://example.com", false);
-	BUrl relative(base, "path");
+	BUrl relative(base, BString("path"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("/path"), relative.Path());
 }
@@ -350,7 +350,7 @@ BUrlTest::RelativeUrlConstructorWithPathNoQuery_ClearsQuery()
 {
 	// RFC3986: Relative path without query should not inherit base query
 	BUrl base("http://example.com/path?basequery", false);
-	BUrl relative(base, "newpath");
+	BUrl relative(base, BString("newpath"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("http"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("example.com"), relative.Host());
@@ -363,7 +363,7 @@ BUrlTest::RelativeUrlConstructorWithAuthorityAndPath_UsesRelativeAuthority()
 {
 	// RFC3986: "//host/path" should use relative authority and path
 	BUrl base("http://example.com/basepath?query", false);
-	BUrl relative(base, "//newhost.com/newpath?newquery");
+	BUrl relative(base, BString("//newhost.com/newpath?newquery"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("http"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("newhost.com"), relative.Host());
@@ -377,7 +377,7 @@ BUrlTest::RelativeUrlConstructorWithProtocolAndFragment_PreservesFragment()
 {
 	// RFC3986: Full URL with fragment should preserve fragment
 	BUrl base("http://example.com/path", false);
-	BUrl relative(base, "https://other.com/newpath#frag");
+	BUrl relative(base, BString("https://other.com/newpath#frag"));
 
 	CPPUNIT_ASSERT_EQUAL(BString("https"), relative.Protocol());
 	CPPUNIT_ASSERT_EQUAL(BString("other.com"), relative.Host());
