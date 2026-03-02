@@ -10,9 +10,6 @@
 #include "bstring/StringTest.h"
 #include "bblockcache/BlockCacheTest.h"
 #include "bstopwatch/BStopWatchTest.h"
-#include "burl/BUrlTest.h"
-#include "ByteOrderTest.h"
-#include "DateTimeTest.h"
 
 
 BTestSuite *
@@ -30,9 +27,9 @@ getTestSuite()
 	suite->addTest("BString", StringTestSuite());
 	suite->addTest("BBlockCache", BlockCacheTestSuite());
 	suite->addTest("BStopWatch", BStopWatchTestSuite());
-	suite->addTest("BUrl", BUrlTestSuite());
 	suite->addTest("ByteOrder", ByteOrderTestSuite());
 
 	return suite;
 }
+
 
